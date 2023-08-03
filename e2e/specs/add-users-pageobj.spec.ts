@@ -68,6 +68,11 @@ describe('Add users form',()=>{
     expect(await element.all(by.css('table.users-table tbody tr td:first-child')).get(0).getText()).toEqual(usersList[0].userName);
   })
 
+  it('should show the no users added message when the page is loaded', async()=>{
+    waitForElementToBePresent(element(by.id('no-data-section')));
+    expect(await element(by.id('no-data-section')).getText()).toEqual('No Users Added');
+  })
+
   it('should sort the users data based on the column selected', async ()=>{
     const fillUserDetails = async (userObj:any)=>{
       await addUsers.nameInput.sendKeys(userObj.userName);
@@ -89,6 +94,7 @@ describe('Add users form',()=>{
   })
 
   it('should show the filter button if there is an user is present', async ()=>{
+    expect(await addUsers.filterBtn.isPresent()).toBeFalsy();
     const fillUserDetails = async (userObj:any)=>{
       await addUsers.nameInput.sendKeys(userObj.userName);
       await addUsers.emailInput.sendKeys(userObj.email);
