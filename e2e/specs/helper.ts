@@ -38,7 +38,7 @@ export class JasmineUtility{
   }
 
   calculateAverage(arr:number[]):number{
-    const positiveNumbers = arr.filter((num)=> num>=0);
+    const positiveNumbers = arr.filter((num)=> num>=0); //Eliminate the negative numbers from the array
     if(positiveNumbers.length == 0){
       throw Error('No positive integers found');
     }
