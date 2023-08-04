@@ -15,6 +15,10 @@ export class AddUsers{
   public usersTable = element(by.css('table.users-table'));
   public usersTableRowFirstChildren = element.all(by.css('table.users-table tbody tr td:first-child'));
   public usersTableRowSecondColumn = element.all(by.css('table.users-table tbody tr td:nth-child(2)'));
+  public usersTableRowThirdColumn = element.all(by.css('table.users-table tbody tr td:nth-child(3)'));
+  public usersTableRowFourthColumn = element.all(by.css('table.users-table tbody tr td:nth-child(4)'));
+  public usersTableRowFifthColumn = element.all(by.css('table.users-table tbody tr td:nth-child(5)'));
+
   public usersTableRows = element.all(by.css('table.users-table tbody tr'));
   public noDataSection = element(by.id('no-data-section'));
   public usersTableHeaderFirstcolumn = element(by.css('table.users-table thead tr th:first-child'));
