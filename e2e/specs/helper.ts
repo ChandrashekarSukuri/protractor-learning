@@ -14,14 +14,6 @@ export class JasmineUtility{
     return this.str;
   }
 
-  getPromiseTimeout(){
-    return new Promise((resolve)=>{
-        setTimeout(()=>{
-            resolve('timoutTest');
-        },200)
-    })
-  }
-
   timeout:any;
   timeoutFun(){
     this.timeout = setTimeout(()=>{
