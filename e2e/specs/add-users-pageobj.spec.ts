@@ -44,6 +44,19 @@ describe('Add users form',()=>{
     expect(await addUsers.getheadingText()).toEqual('Add Users');
   })
 
+  it('should show the no users added message when the page is loaded', async()=>{
+    await waitForElementToBePresent(addUsers.noDataSection);
+    expect(await addUsers.noDataSection.getText()).toEqual('No Users Added');
+  })
+
+
+  it('should not enable the add users button for invalid data', async ()=>{
+    await addUsers.nameInput.sendKeys(usersList[0].userName);
+    await addUsers.emailInput.sendKeys(usersList[0].email);
+    //Ignoring the remaining fields to fail the form validation
+    expect(await addUsers.addUserBtn.isEnabled()).toBeFalsy();
+  })
+
   it('should enable the add users button for the valid data', async ()=>{
     await addUsers.nameInput.sendKeys(usersList[0].userName);
     await addUsers.emailInput.sendKeys(usersList[0].email);
@@ -55,12 +68,6 @@ describe('Add users form',()=>{
     expect(await addUsers.addUserBtn.isEnabled()).toBeTruthy();
   })
 
-  it('should not enable the add users button for invalid data', async ()=>{
-    await addUsers.nameInput.sendKeys(usersList[0].userName);
-    await addUsers.emailInput.sendKeys(usersList[0].email);
-    //Ignoring the remaining fields to fail the form validation
-    expect(await addUsers.addUserBtn.isEnabled()).toBeFalsy();
-  })
 
   it('should add the correct data in the table for valid user data', async ()=>{
     await addUsers.nameInput.sendKeys(usersList[0].userName);
@@ -74,12 +81,13 @@ describe('Add users form',()=>{
     await addUsers.addUserBtn.click();
     await waitForElementToBePresent(addUsers.usersTable);
     expect(await addUsers.usersTableRowFirstChildren.get(0).getText()).toEqual(usersList[0].userName);
+    expect(await addUsers.usersTableRowSecondColumn.get(0).getText()).toEqual(usersList[0].designation);
+    expect(await addUsers.usersTableRowThirdColumn.get(0).getText()).toEqual(usersList[0].email);
+    expect(await addUsers.usersTableRowFourthColumn.get(0).getText()).toEqual(usersList[0].age);
+    expect(await addUsers.usersTableRowFifthColumn.get(0).getText()).toEqual(usersList[0].gender);
+
   })
 
-  it('should show the no users added message when the page is loaded', async()=>{
-    await waitForElementToBePresent(addUsers.noDataSection);
-    expect(await addUsers.noDataSection.getText()).toEqual('No Users Added');
-  })
 
   it('should sort the users data in ascending order by name for one click on Name header', async ()=>{
     const fillUserDetails = async (userObj:any)=>{
