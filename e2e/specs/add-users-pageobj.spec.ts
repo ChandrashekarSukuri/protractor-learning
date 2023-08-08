@@ -89,7 +89,7 @@ describe('Add users form',()=>{
   })
 
 
-  it('should sort the users data in ascending order by name for one click on Name header', async ()=>{
+  it('should sort the u sers data in ascending order by name for one click on Name header', async ()=>{
     const fillUserDetails = async (userObj:any)=>{
       await addUsers.nameInput.sendKeys(userObj.userName);
       await addUsers.emailInput.sendKeys(userObj.email);

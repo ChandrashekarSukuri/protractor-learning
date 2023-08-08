@@ -31,38 +31,38 @@ export class AddUsers{
     await this.addUserBtn.click();
   }
 
-  async getheadingText(){
-    return await element(by.id('addUsersHeading')).getText();
+  getheadingText(){
+    return element(by.id('addUsersHeading')).getText();
   }
-  async getGenderFiltersOptionByName(name:string){
-    return await element(by.css('[type="radio"][name="genderFilter"][value="'+name+'"]'));
+  getGenderFiltersOptionByName(name:string){
+    return element(by.css('[type="radio"][name="genderFilter"][value="'+name+'"]'));
   }
 
   async clickGenderFiltersOptionByName(name:string){
-    return await element(by.css('[type="radio"][name="genderFilter"][value="'+name+'"]')).click();
+    await element(by.css('[type="radio"][name="genderFilter"][value="'+name+'"]')).click();
   }
 
   async clickGenderOptionByName(name:string){
-    return await element(by.css('[type="radio"][name="gender"][value="'+name+'"]')).click();
+    await element(by.css('[type="radio"][name="gender"][value="'+name+'"]')).click();
   }
 
-  async getDesignationOptionsByName(name:string){
-    return await element(by.cssContainingText('[role="listbox"] mat-option.designation-option',name));
+  getDesignationOptionsByName(name:string){
+    return  element(by.cssContainingText('[role="listbox"] mat-option.designation-option',name));
   }
 
-  async getDesignationFilterOptionsByName(name:string){
-    return await element(by.cssContainingText('[role="listbox"] mat-option.designation-filter-option',name));
+  getDesignationFilterOptionsByName(name:string){
+    return element(by.cssContainingText('[role="listbox"] mat-option.designation-filter-option',name));
   }
   async clickDesignationOptionsByName(name:string){
-    return await element(by.cssContainingText('[role="listbox"] mat-option.designation-option',name)).click();
+    return element(by.cssContainingText('[role="listbox"] mat-option.designation-option',name)).click();
   }
 
   async clickDesignationFilterOptionsByName(name:string){
-    return await element(by.cssContainingText('[role="listbox"] mat-option.designation-filter-option',name)).click();
+    return element(by.cssContainingText('[role="listbox"] mat-option.designation-filter-option',name)).click();
   }
 
-  async getGenderOptionByName(name:string){
-    return await element(by.css('[type="radio"][name="gender"][value="'+ name +'"]'));
+  getGenderOptionByName(name:string){
+    return element(by.css('[type="radio"][name="gender"][value="'+ name +'"]'));
   }
 
   async openDesignationDropdown(){
