@@ -5,7 +5,6 @@ export class AddUsers{
   public emailInput = element(by.name('email'));
   public designationSelect = element(by.name('designation'));
   public ageInput = element(by.name('age'));
-  public genderRadioSelect = element(by.name('gender'));
   public addUserBtn = element(by.buttonText('Add User'));
   public filterBtn = element(by.id('filter-users'));
   public submitFilterBtn = element(by.name('filterUser'));
@@ -27,15 +26,9 @@ export class AddUsers{
   async getAddUserForm(){
     await browser.get('http://localhost:4200/');
   }
-  async submitUser(){
-    await this.addUserBtn.click();
-  }
 
   getheadingText(){
     return element(by.id('addUsersHeading')).getText();
-  }
-  getGenderFiltersOptionByName(name:string){
-    return element(by.css('[type="radio"][name="genderFilter"][value="'+name+'"]'));
   }
 
   async clickGenderFiltersOptionByName(name:string){
@@ -61,10 +54,6 @@ export class AddUsers{
     return element(by.cssContainingText('[role="listbox"] mat-option.designation-filter-option',name)).click();
   }
 
-  getGenderOptionByName(name:string){
-    return element(by.css('[type="radio"][name="gender"][value="'+ name +'"]'));
-  }
-
   async openDesignationDropdown(){
     await this.designationSelect.click();
   }
@@ -72,6 +61,5 @@ export class AddUsers{
   async openDesignationFilterDropdown(){
     await this.designationSelectFilter.click();
   }
-
 
 }
