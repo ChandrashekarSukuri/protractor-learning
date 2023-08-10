@@ -10,7 +10,7 @@ const { SpecReporter, StacktraceOption } = require('jasmine-spec-reporter');
 exports.config = {
   seleniumAddress: 'http://localhost:4444/wd/hub',
   allScriptsTimeout: 11000,
-  specs: ["specs/upwork.spec.ts"],//super-calculator.spec.ts //average.spec.ts
+  specs: ["specs/magento.spec.ts"],//super-calculator.spec.ts //average.spec.ts
   // page-object-example.spec.ts //jasmine.spec.ts //add-users-pageobj.spec.ts
   capabilities: {
     browserName: 'chrome'
