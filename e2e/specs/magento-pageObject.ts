@@ -23,9 +23,11 @@ export class MagentoPageObject {
   public myAccountBtn = element(by.css('.page-header .customer-menu li:nth-child(1) a'));
   public myAccountSidebar = element(by.css('.sidebar.sidebar-main'));
   public addressBookLink = element(by.cssContainingText('.sidebar.sidebar-main .nav.item','Address Book'));
+  public myOrdersLink = element(by.cssContainingText('.sidebar.sidebar-main .nav.item','My Orders'));
   public whatsNewLink = element(by.cssContainingText('.section-item-content ul li.category-item.first a',"What's New"));
   public womensHoodiesLink = element.all(by.cssContainingText('.columns .sidebar .categories-menu li:first-child a','Hoodies & Sweatshirts')).get(0);
   public productItem = element(by.css('.products .list li:first-child'));
+  public productItem2 = element(by.css('.products .list li:nth-child(2)'));
   public productViewToCartBtn = element(by.css('.product-options-bottom button.tocart'));
   public productSizeSection = element(by.css('#product-options-wrapper .swatch-attribute.size'));
   public productSizeM  = element(by.css('#product-options-wrapper .swatch-attribute.size .swatch-option:first-child'));
@@ -42,7 +44,9 @@ export class MagentoPageObject {
   public paymentMethodStepTitle = element(by.css('#checkoutSteps .checkout-payment-method .step-title'));
   public placeOrderBtn = element(by.css('#payment #co-payment-form button.checkout'));
   public addToWishListLink = element(by.css('.product-addto-links a.towishlist'));
+  public wishlistedProductsSection = element.all(by.css('.products-grid.wishlist'));
   public wishlistedProducts = element.all(by.css('.products-grid.wishlist .price-box.price-final_price'));
+  public wishlistedProductLinks = element.all(by.css('.products-grid.wishlist .product-item-info a.product-item-photo'));
   public loadingSpinner = element(by.css('.loading-mask'));
   public checkOutProgressBar = element(by.css('#checkout .opc-progress-bar'));
   public checkOutAddressLoadingSpinner = element(by.css('#checkout-loader'));
@@ -63,6 +67,33 @@ export class MagentoPageObject {
   public defaultShippingCheckbox = element(by.name('default_shipping'));
   public addNewAddressSubmit = element(by.css('.form-address-edit .actions-toolbar button.save'));
 
+  public addToCartFromWishlistBtn = element(by.css('#wishlist-view-form .actions-toolbar button.tocart'));
+  public wishListEmptyMessage = element(by.css('#wishlist-view-form .message.info'));
+  public viewCartBtn = element(by.css('#minicart-content-wrapper .actions a.viewcart'));
+
+  public shoppingCartTable = element(by.id('shopping-cart-table'));
+  public inCartProductLinks = element.all(by.css('.cart.item a.product-item-photo'));
+  public cartProductCount = element(by.css('a.action.showcart .counter.qty'));
+  public inCartFirstProductDelete = element.all(by.css('#shopping-cart-table .item-actions a.action-delete')).get(0);
+
+  public sortSelect = element.all(by.id('sorter')).get(0);
+  public sortByNameOption = element.all(by.css('#sorter option[value="name"]')).get(0);
+  public sortSwitch = element.all(by.css('a.sorter-action[data-role="direction-switcher')).get(0);
+  public productsNamesLinks = element.all(by.css('.product-item-name a.product-item-link'));
+  public newProductsList = element.all(by.css('.products.wrapper.grid.products-grid'));
+  public priceFilter = element(by.cssContainingText('.filter-options-item','Price'));
+  public productPrices = element.all(by.css('.product-item-details .price-final_price .price-wrapper'));
+  public priceFilterOptions = this.priceFilter.element(by.css('.filter-options-content li.item:first-child'));
+  public fromPrice = this.priceFilter.element(by.css('.filter-options-content li.item:first-child .price:first-child'));
+  public toPrice = this.priceFilter.element(by.css('.filter-options-content li.item:first-child .price:nth-child(2)'));
+  public firstAvailablePriceFilter = this.priceFilter.element(by.css('.filter-options-content li.item:first-child'));
+
+  public orderNumberConfirmationLink = element(by.css('a.order-number'));
+  public myOrdersTable = element(by.id('my-orders-table'));
+  public ordersTableIdsColumns = element.all(by.css('#my-orders-table tbody tr td:first-child'));
+
+  public wishListedFirstItem = element(by.css('.products-grid.wishlist .product-items .product-item:first-child'));
+  public wishListedFirstItemDelete = element(by.css('.products-grid.wishlist .product-items .product-item:first-child .product-item-inner .btn-remove'));
 
   async getMagentoSite(){
     await browser.waitForAngularEnabled(false);
@@ -91,5 +122,25 @@ export class MagentoPageObject {
 
   getProductId(){
     return element(by.css('.product-info-main .product-info-price .price-box.price-final_price')).getAttribute('data-product-id');
+  }
+
+  getWhishlistedProductLinks(){
+    return this.wishlistedProductLinks.map((ele)=>ele.getAttribute('href').then((val)=>val.split('?')[0]));
+  }
+
+  getProductLinksInCart(){
+    return this.inCartProductLinks.map((ele)=>ele.getAttribute('href'));
+  }
+
+  async getNewProductsNames(){
+    return await this.productsNamesLinks.map(async (ele)=> await ele.getText());
+  }
+
+  async getNewProductPrices(){
+    return await this.productPrices.map(ele => ele.getText());
+  }
+
+  async getOrderIds(){
+    return await this.ordersTableIdsColumns.map(ele => ele.getText());
   }
 }
