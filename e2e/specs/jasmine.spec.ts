@@ -1,6 +1,4 @@
-import {browser} from "protractor";
-
-import {JasmineUtility} from "./helper";
+import {JasmineUtility} from "../utility/helper";
 
 describe("Jasmine sample test suite", ()=> {
   let funObj;
@@ -22,7 +20,6 @@ describe("Jasmine sample test suite", ()=> {
   });
 
   it('should pass assertions testing with some matchers', ()=>{
-    const randomStr = 'randomString';
     expect(true).toBe(true);
     expect('randomString').toEqual('randomString');
     expect(12.456).toBeCloseTo(12.451,2);

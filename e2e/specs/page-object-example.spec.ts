@@ -1,5 +1,5 @@
-import {browser,by,element} from "protractor";
-import {AngularHomePage} from "./page-object-example";
+import {browser} from "protractor";
+import {AngularHomePage} from "../page-objects/page-object-example";
 
 describe('Angular home page',()=>{
     let angularHome:any;

@@ -1,6 +1,8 @@
 import {browser,element,by} from "protractor";
+import {WaitUtility} from "../utility/wait-utility";
 
 export class MagentoPageObject {
+  waitUtil = new WaitUtility();
   public magentoURL = 'https://magento.softwaretestingboard.com/';
   public signInButton = element.all(by.cssContainingText('.page-header .panel.header ul.header.links li.authorization-link a','Sign In')).get(0);
   public createAccountLink = element(by.cssContainingText('.page-header ul.header.links li a','Create an Account'));
@@ -95,29 +97,42 @@ export class MagentoPageObject {
   public wishListedFirstItem = element(by.css('.products-grid.wishlist .product-items .product-item:first-child'));
   public wishListedFirstItemDelete = element(by.css('.products-grid.wishlist .product-items .product-item:first-child .product-item-inner .btn-remove'));
 
+  public accountEditURL = 'https://magento.softwaretestingboard.com/customer/account/edit/';
+  public magentoLoginURL = 'https://magento.softwaretestingboard.com/customer/account/login/';
+  public accountEditBtn = element(by.css('a.action.edit[href="'+this.accountEditURL+'"]'));
+  public changePasswordCheckbox = element(by.id('change-password'));
+  public currentPassword = element(by.id('current-password'));
+  public newPasswordConfirm = element(by.id('password-confirmation'));
+  public accountEditSaveBtn = element(by.css('form.form-edit-account button.save'));
+
   async getMagentoSite(){
     await browser.waitForAngularEnabled(false);
     await browser.get(this.magentoURL);
   }
 
   async clickCreateNewAccountLink(){
-    await this.createAccountLink.click();
+    await this.waitUtil.waitForElementToBePresent(this.createAccountLink);
+    return this.createAccountLink.click();
   }
 
   async clickLoginLink(){
-    await this.signInButton.click();
+    await this.waitUtil.waitForElementToBePresent(this.signInButton);
+    return this.signInButton.click();
   }
 
   async clickCreateNewAccountSubmit(){
-    await this.createAccountSubmitBtn.click();
+    await this.waitUtil.waitForElementToBePresent(this.createAccountSubmitBtn);
+    return  this.createAccountSubmitBtn.click();
   }
 
   async clickLoginSubmit(){
-    await this.loginSubmitBtn.click();
+    await this.waitUtil.waitForElementToBePresent(this.loginSubmitBtn);
+    return  this.loginSubmitBtn.click();
   }
 
   async openCustomerDropdownMenu(){
-    await this.customerMenuDropdownIcon.click();
+    await this.waitUtil.waitForElementToBePresent(this.customerMenuDropdownIcon);
+    return this.customerMenuDropdownIcon.click();
   }
 
   getProductId(){
@@ -133,14 +148,19 @@ export class MagentoPageObject {
   }
 
   async getNewProductsNames(){
-    return await this.productsNamesLinks.map(async (ele)=> await ele.getText());
+    return this.productsNamesLinks.map(async (ele)=> await ele.getText());
   }
 
   async getNewProductPrices(){
-    return await this.productPrices.map(ele => ele.getText());
+    return this.productPrices.map(ele => ele.getText());
   }
 
   async getOrderIds(){
-    return await this.ordersTableIdsColumns.map(ele => ele.getText());
+    return this.ordersTableIdsColumns.map(ele => ele.getText());
+  }
+
+  async clickAddToWishListLink(){
+    await this.waitUtil.waitForElementToBePresent(this.addToWishListLink);
+    return  this.addToWishListLink.click();
   }
 }

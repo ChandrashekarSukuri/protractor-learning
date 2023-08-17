@@ -1,5 +1,4 @@
-import {browser} from "protractor";
-import {JasmineUtility} from "./helper";
+import {JasmineUtility} from "../utility/helper";
 
 describe('Calculate average method',()=>{
     let utility;

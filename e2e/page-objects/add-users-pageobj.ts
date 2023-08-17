@@ -1,6 +1,8 @@
 import {browser,element,by} from "protractor";
+import {WaitUtility} from "../utility/wait-utility";
 
 export class AddUsers{
+  waitUtil = new WaitUtility();
   public nameInput = element(by.name('userName'));
   public emailInput = element(by.name('email'));
   public designationSelect = element(by.name('designation'));
@@ -23,43 +25,61 @@ export class AddUsers{
   public usersTableHeaderFirstcolumn = element(by.css('table.users-table thead tr th:first-child'));
   public usersTableHeaderSecondcolumn = element(by.css('table.users-table thead tr th:nth-child(2)'));
 
+  public addUsersHeading = element(by.id('addUsersHeading'));
+
   async getAddUserForm(){
     await browser.get('http://localhost:4200/');
   }
 
-  getheadingText(){
-    return element(by.id('addUsersHeading')).getText();
+  getHeadingText(){
+    return this.addUsersHeading.getText();
   }
 
   async clickGenderFiltersOptionByName(name:string){
-    await element(by.css('[type="radio"][name="genderFilter"][value="'+name+'"]')).click();
+    const ele = element(by.css('[type="radio"][name="genderFilter"][value="'+name+'"]'));
+    await this.waitUtil.waitForElementToBePresent(ele);
+    return ele.click();
   }
 
   async clickGenderOptionByName(name:string){
-    await element(by.css('[type="radio"][name="gender"][value="'+name+'"]')).click();
+    const ele = element(by.css('[type="radio"][name="gender"][value="'+name+'"]'));
+    await this.waitUtil.waitForElementToBePresent(ele);
+    return ele.click();
   }
 
   getDesignationOptionsByName(name:string){
-    return  element(by.cssContainingText('[role="listbox"] mat-option.designation-option',name));
+    return element(by.cssContainingText('[role="listbox"] mat-option.designation-option',name));
   }
 
   getDesignationFilterOptionsByName(name:string){
     return element(by.cssContainingText('[role="listbox"] mat-option.designation-filter-option',name));
   }
   async clickDesignationOptionsByName(name:string){
-    return element(by.cssContainingText('[role="listbox"] mat-option.designation-option',name)).click();
+    const ele = this.getDesignationOptionsByName(name);
+    await this.waitUtil.waitForElementToBePresent(ele);
+    return ele.click();
   }
 
   async clickDesignationFilterOptionsByName(name:string){
-    return element(by.cssContainingText('[role="listbox"] mat-option.designation-filter-option',name)).click();
+    const ele= this.getDesignationFilterOptionsByName(name);
+    await this.waitUtil.waitForElementToBePresent(ele);
+    return ele.click();
   }
 
   async openDesignationDropdown(){
-    await this.designationSelect.click();
+    await this.waitUtil.waitForElementToBePresent(this.designationSelect);
+    return this.designationSelect.click();
   }
 
   async openDesignationFilterDropdown(){
-    await this.designationSelectFilter.click();
+    await this.waitUtil.waitForElementToBePresent(this.designationSelectFilter);
+    return this.designationSelectFilter.click();
+  }
+
+  async openUsersFilterDialog(){
+    await this.waitUtil.waitForElementToBePresent(this.filterBtn);
+    await this.filterBtn.click();
+    await this.waitUtil.waitForElementToBePresent(this.usersFilterDialog);
   }
 
 }
