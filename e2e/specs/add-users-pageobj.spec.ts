@@ -1,11 +1,6 @@
-import {browser, protractor} from "protractor";
-import {AddUsers} from "./add-users-pageobj";
-
-const waitForElementToBePresent = (elementFinder) => {
-  let EC = protractor.ExpectedConditions;
-  return browser.wait(EC.presenceOf(elementFinder), 5000);
-}
-
+import {browser} from "protractor";
+import {AddUsers} from "../page-objects/add-users-pageobj";
+import {WaitUtility} from "../utility/wait-utility";
 
 const usersList = [
   {
@@ -33,19 +28,39 @@ const usersList = [
 
 describe('Add users form',()=>{
   let addUsers:any;
-  const until = protractor.ExpectedConditions;
+  const waitUtil = new WaitUtility();
   beforeEach(async ()=>{
     addUsers = new AddUsers();
     await addUsers.getAddUserForm();
     browser.waitForAngularEnabled(true);
   })
+  const addAUser = async (userObj:any)=>{
+      await fillUserDetails(userObj);
+      await browser.wait(addUsers.addUserBtn.isEnabled(),3000);
+      await addUsers.addUserBtn.click();
+  }
+
+  const fillUserDetails = async (userObj:any)=>{
+    await addUsers.nameInput.sendKeys(userObj.userName);
+    await addUsers.emailInput.sendKeys(userObj.email);
+    await addUsers.openDesignationDropdown();
+    await addUsers.clickDesignationOptionsByName(userObj.designation);
+    await addUsers.ageInput.sendKeys(userObj.age);
+    await addUsers.clickGenderOptionByName(userObj.gender);
+  }
+
+  const addThreeUsers = async()=>{
+      await addAUser(usersList[0]);
+      await addAUser(usersList[1]);
+      await addAUser(usersList[2]);
+  }
 
   it('should have the form heading Add Users',async ()=>{
-    expect(await addUsers.getheadingText()).toEqual('Add Users');
+    expect(await addUsers.getHeadingText()).toEqual('Add Users');
   })
 
   it('should show the no users added message when the page is loaded', async()=>{
-    await waitForElementToBePresent(addUsers.noDataSection);
+    await waitUtil.waitForElementToBePresent(addUsers.noDataSection);
     expect(await addUsers.noDataSection.getText()).toEqual('No Users Added');
   })
 
@@ -58,28 +73,16 @@ describe('Add users form',()=>{
   })
 
   it('should enable the add users button for the valid data', async ()=>{
-    await addUsers.nameInput.sendKeys(usersList[0].userName);
-    await addUsers.emailInput.sendKeys(usersList[0].email);
-    await addUsers.openDesignationDropdown();
-    await browser.wait(until.presenceOf(await addUsers.getDesignationOptionsByName(usersList[0].designation)),3000);
-    await addUsers.clickDesignationOptionsByName(usersList[0].designation);
-    await addUsers.ageInput.sendKeys(usersList[0].age);
-    await addUsers.clickGenderOptionByName(usersList[0].gender);
+    await fillUserDetails(usersList[0]);
     expect(await addUsers.addUserBtn.isEnabled()).toBeTruthy();
   })
 
 
   it('should add the correct data in the table for valid user data', async ()=>{
-    await addUsers.nameInput.sendKeys(usersList[0].userName);
-    await addUsers.emailInput.sendKeys(usersList[0].email);
-    await addUsers.openDesignationDropdown();
-    await browser.wait(until.presenceOf(await addUsers.getDesignationOptionsByName(usersList[0].designation)),3000);
-    await addUsers.clickDesignationOptionsByName(usersList[0].designation);
-    await addUsers.ageInput.sendKeys(usersList[0].age);
-    await addUsers.clickGenderOptionByName(usersList[0].gender);
+    await fillUserDetails(usersList[0]);
     await browser.wait(addUsers.addUserBtn.isEnabled(),3000);
     await addUsers.addUserBtn.click();
-    await waitForElementToBePresent(addUsers.usersTable);
+    await waitUtil.waitForElementToBePresent(addUsers.usersTable);
     expect(await addUsers.usersTableRowFirstChildren.get(0).getText()).toEqual(usersList[0].userName);
     expect(await addUsers.usersTableRowSecondColumn.get(0).getText()).toEqual(usersList[0].designation);
     expect(await addUsers.usersTableRowThirdColumn.get(0).getText()).toEqual(usersList[0].email);
@@ -90,21 +93,8 @@ describe('Add users form',()=>{
 
 
   it('should sort the users data in ascending order by name for one click on Name header', async ()=>{
-    const fillUserDetails = async (userObj:any)=>{
-      await addUsers.nameInput.sendKeys(userObj.userName);
-      await addUsers.emailInput.sendKeys(userObj.email);
-      await addUsers.openDesignationDropdown();
-      await browser.wait(until.presenceOf(await addUsers.getDesignationOptionsByName(userObj.designation)),3000);
-      await addUsers.clickDesignationOptionsByName(userObj.designation);
-      await addUsers.ageInput.sendKeys(userObj.age);
-      await addUsers.clickGenderOptionByName(userObj.gender);
-      await browser.wait(addUsers.addUserBtn.isEnabled(),3000);
-      await addUsers.addUserBtn.click();
-    }
-    await fillUserDetails(usersList[0]);
-    await fillUserDetails(usersList[1]);
-    await fillUserDetails(usersList[2]);
-    await waitForElementToBePresent(addUsers.usersTable);
+    await addThreeUsers();
+    await waitUtil.waitForElementToBePresent(addUsers.usersTable);
     await addUsers.usersTableHeaderFirstcolumn.click();
 
     const firstColumnValues = await addUsers.usersTableRowFirstChildren.map((item:any)=> item.getText());
@@ -114,21 +104,10 @@ describe('Add users form',()=>{
   })
 
   it('should sort the users data in descending order by designation for 2 clicks on designation header', async ()=>{
-    const fillUserDetails = async (userObj:any)=>{
-      await addUsers.nameInput.sendKeys(userObj.userName);
-      await addUsers.emailInput.sendKeys(userObj.email);
-      await addUsers.openDesignationDropdown();
-      await browser.wait(until.presenceOf(await addUsers.getDesignationOptionsByName(userObj.designation)),3000);
-      await addUsers.clickDesignationOptionsByName(userObj.designation);
-      await addUsers.ageInput.sendKeys(userObj.age);
-      await addUsers.clickGenderOptionByName(userObj.gender);
-      await browser.wait(addUsers.addUserBtn.isEnabled(),3000);
-      await addUsers.addUserBtn.click();
-    }
-    await fillUserDetails(usersList[2]);
-    await fillUserDetails(usersList[0]);
-    await fillUserDetails(usersList[1]);
-    await waitForElementToBePresent(addUsers.usersTable);
+    await addAUser(usersList[2]);
+    await addAUser(usersList[0]);
+    await addAUser(usersList[1]);
+    await waitUtil.waitForElementToBePresent(addUsers.usersTable);
     await addUsers.usersTableHeaderSecondcolumn.click();
     await addUsers.usersTableHeaderSecondcolumn.click();
 
@@ -140,39 +119,13 @@ describe('Add users form',()=>{
 
   it('should show the filter button if there is at least one user is present', async ()=>{
     expect(await addUsers.filterBtn.isPresent()).toBeFalsy();
-    const fillUserDetails = async (userObj:any)=>{
-      await addUsers.nameInput.sendKeys(userObj.userName);
-      await addUsers.emailInput.sendKeys(userObj.email);
-      await addUsers.openDesignationDropdown();
-      await browser.wait(until.presenceOf(await addUsers.getDesignationOptionsByName(userObj.designation)),3000);
-      await addUsers.clickDesignationOptionsByName(userObj.designation);
-      await addUsers.ageInput.sendKeys(userObj.age);
-      await addUsers.clickGenderOptionByName(userObj.gender);
-      await browser.wait(addUsers.addUserBtn.isEnabled(),3000);
-      await addUsers.addUserBtn.click();
-    }
-    await fillUserDetails(usersList[0]);
+    await addAUser(usersList[0]);
     expect(await addUsers.filterBtn.isPresent()).toBeTruthy();
   })
 
   it('should filter the user data correctly when gender filter is applied', async ()=>{
-    const fillUserDetails = async (userObj:any)=>{
-      await addUsers.nameInput.sendKeys(userObj.userName);
-      await addUsers.emailInput.sendKeys(userObj.email);
-      await addUsers.openDesignationDropdown();
-      await browser.wait(until.presenceOf(await addUsers.getDesignationOptionsByName(userObj.designation)),3000);
-      await addUsers.clickDesignationOptionsByName(userObj.designation);
-      await addUsers.ageInput.sendKeys(userObj.age);
-      await addUsers.clickGenderOptionByName(userObj.gender);
-      await browser.wait(addUsers.addUserBtn.isEnabled(),3000);
-      await addUsers.addUserBtn.click();
-    }
-    await fillUserDetails(usersList[0]);
-    await fillUserDetails(usersList[1]);
-    await fillUserDetails(usersList[2]);
-    await waitForElementToBePresent(addUsers.filterBtn);
-    await addUsers.filterBtn.click();
-    await waitForElementToBePresent(addUsers.usersFilterDialog);
+    await addThreeUsers();
+    await addUsers.openUsersFilterDialog();
     await addUsers.clickGenderFiltersOptionByName('Male');
     await addUsers.submitFilterBtn.click();
 
@@ -182,26 +135,10 @@ describe('Add users form',()=>{
   })
 
   it('should filter the user data correctly when designation filter is applied', async ()=>{
-    const fillUserDetails = async (userObj:any)=>{
-      await addUsers.nameInput.sendKeys(userObj.userName);
-      await addUsers.emailInput.sendKeys(userObj.email);
-      await addUsers.openDesignationDropdown();
-      await browser.wait(until.presenceOf(await addUsers.getDesignationOptionsByName(userObj.designation)),3000);
-      await addUsers.clickDesignationOptionsByName(userObj.designation);
-      await addUsers.ageInput.sendKeys(userObj.age);
-      await addUsers.clickGenderOptionByName(userObj.gender);
-      await browser.wait(addUsers.addUserBtn.isEnabled(),3000);
-      await addUsers.addUserBtn.click();
-    }
-    await fillUserDetails(usersList[0]);
-    await fillUserDetails(usersList[1]);
-    await fillUserDetails(usersList[2]);
-    await waitForElementToBePresent(addUsers.filterBtn);
-    await addUsers.filterBtn.click();
-    await waitForElementToBePresent(addUsers.usersFilterDialog);
+    await addThreeUsers();
+    await addUsers.openUsersFilterDialog();
 
     await addUsers.openDesignationFilterDropdown();
-    await browser.wait(until.presenceOf(await addUsers.getDesignationFilterOptionsByName('Developer')),3000);
     await addUsers.clickDesignationFilterOptionsByName('Developer');
     await addUsers.submitFilterBtn.click();
 
@@ -211,28 +148,11 @@ describe('Add users form',()=>{
   })
 
   it('should filter the user data correctly when both designation and gender filter are applied', async ()=>{
-    const fillUserDetails = async (userObj:any)=>{
-      await addUsers.nameInput.sendKeys(userObj.userName);
-      await addUsers.emailInput.sendKeys(userObj.email);
-      await addUsers.openDesignationDropdown();
-      await browser.wait(until.presenceOf(await addUsers.getDesignationOptionsByName(userObj.designation)),3000);
-      await addUsers.clickDesignationOptionsByName(userObj.designation);
-      await addUsers.ageInput.sendKeys(userObj.age);
-      await addUsers.clickGenderOptionByName(userObj.gender);
-      await browser.wait(addUsers.addUserBtn.isEnabled(),3000);
-      await addUsers.addUserBtn.click();
-    }
-    await fillUserDetails(usersList[0]);
-    await fillUserDetails(usersList[1]);
-    await fillUserDetails(usersList[2]);
-
-    await waitForElementToBePresent(addUsers.filterBtn);
-    await addUsers.filterBtn.click();
-    await waitForElementToBePresent(addUsers.usersFilterDialog);
+    await addThreeUsers();
+    await addUsers.openUsersFilterDialog();
 
     await addUsers.clickGenderFiltersOptionByName('Male');
     await addUsers.openDesignationFilterDropdown();
-    await browser.wait(until.presenceOf(await addUsers.getDesignationFilterOptionsByName('Developer')),3000);
     await addUsers.clickDesignationFilterOptionsByName('Developer');
     await addUsers.submitFilterBtn.click();
 
@@ -240,45 +160,19 @@ describe('Add users form',()=>{
     expect(await names[0]).toEqual(usersList[0].userName);
   })
 
-
   it('should display all the users added after applying the filters, when clicked on clear filters button', async ()=>{
-    const fillUserDetails = async (userObj:any)=>{
-      await addUsers.nameInput.sendKeys(userObj.userName);
-      await addUsers.emailInput.sendKeys(userObj.email);
-      await addUsers.openDesignationDropdown();
-      await browser.wait(until.presenceOf(await addUsers.getDesignationOptionsByName(userObj.designation)),3000);
-      await addUsers.clickDesignationOptionsByName(userObj.designation);
-      await addUsers.ageInput.sendKeys(userObj.age);
-      await addUsers.clickGenderOptionByName(userObj.gender);
-      await browser.wait(addUsers.addUserBtn.isEnabled(),3000);
-      await addUsers.addUserBtn.click();
-    }
-    await fillUserDetails(usersList[0]);
-    await fillUserDetails(usersList[1]);
-    await fillUserDetails(usersList[2]);
-
-    await waitForElementToBePresent(addUsers.filterBtn);
-    await addUsers.filterBtn.click();
-
-    await waitForElementToBePresent(addUsers.usersFilterDialog);
+    await addThreeUsers();
+    await addUsers.openUsersFilterDialog();
     await addUsers.clickGenderFiltersOptionByName('Male');
     await addUsers.openDesignationFilterDropdown();
-    await browser.wait(until.presenceOf(await addUsers.getDesignationFilterOptionsByName('Developer')),3000);
     await addUsers.clickDesignationFilterOptionsByName('Developer');
     await addUsers.submitFilterBtn.click();
     expect(await addUsers.usersTableRows.count() as any).toEqual(1);
 
-    await waitForElementToBePresent(addUsers.filterBtn);
-    await addUsers.filterBtn.click();
-    await waitForElementToBePresent(addUsers.usersFilterDialog);
+    await addUsers.openUsersFilterDialog();
     await addUsers.clearFiltersBtn.click();
     expect(await addUsers.usersTableRows.count() as any).toEqual(3);
   })
-
-
-
-
-
 })
 
 
