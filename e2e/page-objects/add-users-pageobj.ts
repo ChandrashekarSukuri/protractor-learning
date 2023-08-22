@@ -47,22 +47,24 @@ export class AddUsers{
     return ele.click();
   }
 
-  getDesignationOptionsByName(name:string){
-    return element(by.cssContainingText('[role="listbox"] mat-option.designation-option',name));
+  async getDesignationOptionsByName(name:string){
+    const ele = element(by.cssContainingText('[role="listbox"] mat-option.designation-option',name));
+    await this.waitUtil.waitForTheTextToBePresent(ele,name);
+    return ele;
   }
 
-  getDesignationFilterOptionsByName(name:string){
-    return element(by.cssContainingText('[role="listbox"] mat-option.designation-filter-option',name));
+  async getDesignationFilterOptionsByName(name:string){
+    const ele= element(by.cssContainingText('[role="listbox"] mat-option.designation-filter-option',name));
+    await this.waitUtil.waitForTheTextToBePresent(ele,name);
+    return ele;
   }
   async clickDesignationOptionsByName(name:string){
-    const ele = this.getDesignationOptionsByName(name);
-    await this.waitUtil.waitForElementToBePresent(ele);
+    const ele = await this.getDesignationOptionsByName(name);
     return ele.click();
   }
 
   async clickDesignationFilterOptionsByName(name:string){
-    const ele= this.getDesignationFilterOptionsByName(name);
-    await this.waitUtil.waitForElementToBePresent(ele);
+    const ele= await this.getDesignationFilterOptionsByName(name);
     return ele.click();
   }
 
