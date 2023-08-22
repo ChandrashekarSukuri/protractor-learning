@@ -282,7 +282,6 @@ describe('Magento Application',()=>{
     await magento.sortSwitch.click();
     await waitUtil.waitForUrlContains('?product_list_order=name&product_list_dir=desc');
     await waitUtil.waitForElementToBePresent(magento.newProductsList);
-    await waitUtil.waitForElementToBePresent(magento.productsNamesLinks);
     const productsNames = Array.from(new Set(await magento.getNewProductsNames()));
     const productNamesSorted = [...productsNames].sort((a:string,b:string)=> a.toLowerCase() < b.toLowerCase() ? -1 : 1 ).reverse();
     expect(productsNames).toEqual(productNamesSorted);
@@ -301,7 +300,6 @@ describe('Magento Application',()=>{
     const toPriceStr = await magento.toPrice.getText();
     const toPrice = parseFloat(toPriceStr.substring(1,toPriceStr.length-1));
     await magento.firstAvailablePriceFilter.click();
-    await waitUtil.waitForElementToBePresent(magento.newProductsList);
     const productPricesStr = await magento.getNewProductPrices();
     const productPrices = productPricesStr.map((price:any)=>parseFloat(price.substring(1,price.length-1)));
     const filteredProductPrices = productPrices.filter((price)=> (fromPrice <= price) && (price <= toPrice));
@@ -316,7 +314,6 @@ describe('Magento Application',()=>{
     await waitUtil.waitForElementToBeVisible(magento.myAccountSidebar);
     await magento.myOrdersLink.click();
     await waitUtil.waitForTheTextToBePresent(magento.signUpPageHeading,'My Orders');
-    await waitUtil.waitForElementToBePresent(magento.myOrdersTable);
     const orderIds = await magento.getOrderIds();
     expect(orderIds).toContain(orderId);
   });

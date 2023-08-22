@@ -148,14 +148,17 @@ export class MagentoPageObject {
   }
 
   async getNewProductsNames(){
+    await this.waitUtil.waitForElementToBePresent(this.productsNamesLinks);
     return this.productsNamesLinks.map(async (ele)=> await ele.getText());
   }
 
   async getNewProductPrices(){
+    await this.waitUtil.waitForElementToBePresent(this.newProductsList);
     return this.productPrices.map(ele => ele.getText());
   }
 
   async getOrderIds(){
+    await this.waitUtil.waitForElementToBePresent(this.myOrdersTable);
     return this.ordersTableIdsColumns.map(ele => ele.getText());
   }
 
