@@ -31,7 +31,8 @@ export class AddUsers{
     await browser.get('http://localhost:4200/');
   }
 
-  getHeadingText(){
+  async getHeadingText(){
+    await this.waitUtil.waitForAnyTextToBePresent(this.addUsersHeading);
     return this.addUsersHeading.getText();
   }
 
