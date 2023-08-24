@@ -29,4 +29,14 @@ export class WaitUtility{
   waitForElementToBeInvisible = (elementFinder:any)=>{
     return browser.wait(this.EC.invisibilityOf(elementFinder),15000);
   }
+
+  waitForAnyTextToBePresent = (elementFinder:any)=>{
+    const hasText = ()=>{
+      return elementFinder.getText().then((actualText:any)=>{
+        return !!actualText;
+      });
+    };
+    return browser.wait(this.EC.and(this.EC.presenceOf(elementFinder), hasText),15000) ;
+  };
+
 }
